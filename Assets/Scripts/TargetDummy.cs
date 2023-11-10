@@ -12,6 +12,7 @@ public class TargetDummy : MonoBehaviour
         if (collision.gameObject.CompareTag("Weapon"))
         {
             dummyAnimator.SetTrigger("Death");
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 
