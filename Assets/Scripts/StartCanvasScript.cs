@@ -27,6 +27,7 @@ public class StartCanvasScript : MonoBehaviour
     public void OnSliderValueChanged(float value)
     {
         continuousMoveProvider.moveSpeed = value;
+    
     }
     public void Exit() 
     {

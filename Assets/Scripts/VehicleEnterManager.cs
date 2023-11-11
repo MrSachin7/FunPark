@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class CarEnterManager : MonoBehaviour
+public class VehicleEnterManager : MonoBehaviour
 {
-    [SerializeField] private Transform carEnterPoint;
+    [SerializeField] private Transform vehicleEnterPoint;
+    [SerializeField] private ActionBasedContinuousMoveProvider continuousMoveProvider;
     private bool isPlayerInRange = false;
-    private bool isPlayerInsideTheCar = false;
+    private bool isPlayerInsideTheVehicle = false;
 
     private XRController xrController;
     private Collider playerCollider;
@@ -17,6 +18,7 @@ public class CarEnterManager : MonoBehaviour
     {
         xrController = GetComponent<XRController>();
         xrController.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out _); // Initialize button state
+
     }
 
 
@@ -43,36 +45,42 @@ public class CarEnterManager : MonoBehaviour
         }
     }
 
-    void TogglePlayerInOrOutOfCar()
+    void TogglePlayerInOrOutOfVehicle()
     {
         if (playerCollider == null) return;
-        if (!isPlayerInsideTheCar)
+        if (!isPlayerInsideTheVehicle)
         {
-            MovePlayerToCar();
+            MovePlayerInsideVehicle();
         }
         else
         {
-            MovePlayerOutOfCar();
+            MovePlayerOutOfVehicle();
         }
     }
 
-    void MovePlayerToCar()
+    void MovePlayerInsideVehicle()
     {
-        playerCollider.transform.position = carEnterPoint.position;
-        playerCollider.transform.rotation = carEnterPoint.rotation;
-        isPlayerInsideTheCar = true;
+        playerCollider.transform.position = vehicleEnterPoint.position;
+        playerCollider.transform.rotation = vehicleEnterPoint.rotation;
+        isPlayerInsideTheVehicle = true;
+
+        continuousMoveProvider.enabled = false;
+
     }
 
-    void MovePlayerOutOfCar()
+    void MovePlayerOutOfVehicle()
     {
-        playerCollider.transform.position = carEnterPoint.position + new Vector3(0, 0, 2);
-        playerCollider.transform.rotation = carEnterPoint.rotation;
-        isPlayerInsideTheCar = false;
+        playerCollider.transform.position = vehicleEnterPoint.position + new Vector3(0, 0, 2);
+        playerCollider.transform.rotation = vehicleEnterPoint.rotation;
+        isPlayerInsideTheVehicle = false;
+
+        continuousMoveProvider.enabled = true;
+
     }
 
-    public bool GetIsPlayerInsideTheCar()
+    public bool GetIsPlayerInsideTheVehicle()
     {
-        return isPlayerInsideTheCar;
+        return isPlayerInsideTheVehicle;
     }
 
 }
