@@ -14,6 +14,8 @@ public class VehicleEnterManager : MonoBehaviour
     private XRController xrController;
     private Collider playerCollider;
 
+    private bool isButtonPressedLastFrame = false;
+
     void Start()
     {
         xrController = GetComponent<XRController>();
@@ -25,6 +27,19 @@ public class VehicleEnterManager : MonoBehaviour
     void Update()
     {
         if (!isPlayerInRange) return;
+        if (xrController == null) return;
+
+        // Check if button is pressed
+        bool isButtonPressedNow = false;
+        xrController.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out isButtonPressedNow);
+
+        if (isButtonPressedNow && !isButtonPressedLastFrame)
+        {
+            TogglePlayerInOrOutOfVehicle();
+
+        }
+        isButtonPressedLastFrame = isButtonPressedNow;
+
     }
 
     void OnTriggerEnter(Collider other)
