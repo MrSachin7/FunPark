@@ -8,68 +8,101 @@ public class VehicleEnterManager : MonoBehaviour
 {
     [SerializeField] private Transform vehicleEnterPoint;
     [SerializeField] private ActionBasedContinuousMoveProvider continuousMoveProvider;
+    [SerializeField] private ActionBasedSnapTurnProvider snapTurnProvider;
+    [SerializeField] private ActionBasedContinuousTurnProvider continousTurnProvider;
     private bool isPlayerInRange = false;
     private bool isPlayerInsideTheVehicle = false;
 
-    private XRController xrController;
     private Collider playerCollider;
 
     private bool isButtonPressedLastFrame = false;
-
-    void Start()
-    {
-        xrController = GetComponent<XRController>();
-        xrController.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out _); // Initialize button state
-
-    }
 
 
     void Update()
     {
         if (!isPlayerInRange) return;
-        if (xrController == null) return;
 
-        // Check if button is pressed
-        bool isButtonPressedNow = false;
-        xrController.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out isButtonPressedNow);
+        List<InputDevice> devices = new List<InputDevice>();
+        InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller, devices);
 
-        if (isButtonPressedNow && !isButtonPressedLastFrame)
+        if (devices.Count > 0)
         {
-            TogglePlayerInOrOutOfVehicle();
+            if (GetPrimaryButtonValue(devices))
+            {
+                if (!isButtonPressedLastFrame)
+                {
+                    TogglePlayerInOrOutOfVehicle();
+                    isButtonPressedLastFrame = true;
+                }
+            }
+            else
+            {
+                isButtonPressedLastFrame = false;
+            }
+        }
+        else
+        {
+            Debug.Log("Controller is not connected");
+        }
+
+
+    }
+
+    private bool GetPrimaryButtonValue(List<InputDevice> inputDevices)
+    {
+        foreach (var device in inputDevices)
+        {
+            device.TryGetFeatureValue(CommonUsages.primaryButton, out bool primaryButtonValue);
+            if (primaryButtonValue)
+            {
+                return true;
+
+            }
 
         }
-        isButtonPressedLastFrame = isButtonPressedNow;
-
+        return false;
     }
 
     void OnTriggerEnter(Collider other)
     {
+
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Player is in range");
             isPlayerInRange = true;
             playerCollider = other;
         }
     }
 
+
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Player is out of range");
             isPlayerInRange = false;
             playerCollider = null;
         }
     }
 
+
     void TogglePlayerInOrOutOfVehicle()
     {
         if (playerCollider == null) return;
+
+        Debug.Log("Toggling player in or out of the vehicle");
+
         if (!isPlayerInsideTheVehicle)
         {
             MovePlayerInsideVehicle();
+            isPlayerInsideTheVehicle = true;
+            DisablePlayerMovements();
         }
         else
         {
             MovePlayerOutOfVehicle();
+            isPlayerInsideTheVehicle = false;
+            EnablePlayerMovements();
         }
     }
 
@@ -79,7 +112,6 @@ public class VehicleEnterManager : MonoBehaviour
         playerCollider.transform.rotation = vehicleEnterPoint.rotation;
         isPlayerInsideTheVehicle = true;
 
-        continuousMoveProvider.enabled = false;
 
     }
 
@@ -89,8 +121,23 @@ public class VehicleEnterManager : MonoBehaviour
         playerCollider.transform.rotation = vehicleEnterPoint.rotation;
         isPlayerInsideTheVehicle = false;
 
-        continuousMoveProvider.enabled = true;
 
+
+    }
+
+
+    private void DisablePlayerMovements()
+    {
+        continuousMoveProvider.enabled = false;
+        snapTurnProvider.enabled = false;
+        continousTurnProvider.enabled = false;
+    }
+
+
+    private void EnablePlayerMovements()
+    {
+        continuousMoveProvider.enabled = true;
+        snapTurnProvider.enabled = true;
     }
 
     public bool GetIsPlayerInsideTheVehicle()
@@ -98,4 +145,20 @@ public class VehicleEnterManager : MonoBehaviour
         return isPlayerInsideTheVehicle;
     }
 
+    public Collider GetPlayerCollider()
+    {
+        return playerCollider;
+    }
+
+    public Transform GetVehicleEnterPoint()
+    {
+        return vehicleEnterPoint;
+    }
+
+    public void SyncPlayerPositionAndRotation()
+    {
+        // Sync the player position and rotation with the vehicle
+        MovePlayerInsideVehicle();
+
+    }
 }
