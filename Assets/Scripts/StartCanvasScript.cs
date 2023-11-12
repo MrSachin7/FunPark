@@ -29,6 +29,11 @@ public class StartCanvasScript : MonoBehaviour
         continuousMoveProvider.moveSpeed = value;
     
     }
+
+    public void OnToggleValueChanged(bool value)
+    {
+        continuousMoveProvider.enableFly = value;
+    }
     public void Exit() 
     {
         Debug.Log("Exiting the application");
