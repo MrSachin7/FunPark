@@ -9,11 +9,12 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class CarController : MonoBehaviour
 {
     private float horizontalInput, verticalInput;
-    private float currentSteerAngle;
+    private float currentSteerAngle, currentBreakForce;
+    private bool isBreaking;
 
     [SerializeField] private VehicleEnterManager vehicleEnterManager;
 
-    [SerializeField] private float motorForce, maxSteerAngle;
+    [SerializeField] private float motorForce, maxSteerAngle, breakForce;
 
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
@@ -26,7 +27,7 @@ public class CarController : MonoBehaviour
     private void FixedUpdate()
     {
         if (vehicleEnterManager == null) return;
-        
+
         // If the player is not inside the vehicle, do not move the vehicle
         if (!vehicleEnterManager.GetIsPlayerInsideTheVehicle()) return;
 
@@ -34,7 +35,16 @@ public class CarController : MonoBehaviour
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+    }
+
+    void Update()
+    {
+        if (vehicleEnterManager == null) return;
+
+        // If the player is not inside the vehicle, do not move the vehicle
+        if (!vehicleEnterManager.GetIsPlayerInsideTheVehicle()) return;
         SyncPlayerAndCar();
+
     }
 
 
@@ -49,22 +59,37 @@ public class CarController : MonoBehaviour
         {
             Vector2 leftThumbStickValue = GetThumbStickValue(devices[0]);
             Vector2 rightThumbStickValue = GetThumbStickValue(devices[1]);
+            bool isBreaking = GetTriggerValue(devices[1]);
 
-            // Acceleration 
-            horizontalInput = leftThumbStickValue.x;
+            // Steering 
+            horizontalInput = rightThumbStickValue.x;
             Debug.Log("Horizontal Input: " + horizontalInput);
 
-            // Steering
-            verticalInput = rightThumbStickValue.y;
+            // Acceleration
+            verticalInput = leftThumbStickValue.y;
             Debug.Log("Vertical Input: " + verticalInput);
 
         }
     }
 
+
+
+
     private void HandleMotor()
     {
         frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
         frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+        currentBreakForce = isBreaking ? breakForce : 0f;
+        ApplyBreaking();
+
+    }
+
+    private void ApplyBreaking()
+    {
+        frontLeftWheelCollider.brakeTorque = currentBreakForce;
+        frontRightWheelCollider.brakeTorque = currentBreakForce;
+        rearLeftWheelCollider.brakeTorque = currentBreakForce;
+        rearRightWheelCollider.brakeTorque = currentBreakForce;
 
     }
 
@@ -102,9 +127,16 @@ public class CarController : MonoBehaviour
         return thumbStickValue;
     }
 
+    private bool GetTriggerValue(InputDevice device)
+    {
+        device.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerValue);
+        return triggerValue;
+    }
+
     private void SyncPlayerAndCar()
     {
         // Sync the player's position and rotation with the car's position and rotation
         vehicleEnterManager.SyncPlayerPositionAndRotation();
     }
+
 }
