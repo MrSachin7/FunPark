@@ -34,7 +34,10 @@ public class CarController : MonoBehaviour
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+        SyncPlayerAndCar();
     }
+
+
 
 
     private void GetInput()
@@ -49,9 +52,11 @@ public class CarController : MonoBehaviour
 
             // Acceleration 
             horizontalInput = leftThumbStickValue.x;
+            Debug.Log("Horizontal Input: " + horizontalInput);
 
             // Steering
             verticalInput = rightThumbStickValue.y;
+            Debug.Log("Vertical Input: " + verticalInput);
 
         }
     }
@@ -95,5 +100,11 @@ public class CarController : MonoBehaviour
         Vector2 thumbStickValue;
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbStickValue);
         return thumbStickValue;
+    }
+
+    private void SyncPlayerAndCar()
+    {
+        // Sync the player's position and rotation with the car's position and rotation
+        vehicleEnterManager.SyncPlayerPositionAndRotation();
     }
 }
