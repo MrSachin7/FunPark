@@ -7,7 +7,7 @@ public class FlyingManager : MonoBehaviour
 {
     [SerializeField] private VehicleEnterManager vehicleEnterManager;
 
-    [SerializeField] private float responsiveness = 0.01f;
+    [SerializeField] private float responsiveness = 10f;
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float throttleAmount = 25f;
 
@@ -59,7 +59,7 @@ public class FlyingManager : MonoBehaviour
         }
         throttle = Mathf.Clamp(throttle, 0f, 5f);
 
-        rigidbody.velocity = transform.forward * movement* movementSpeed ;;
+        rigidbody.velocity = transform.forward * movement * movementSpeed;
         rigidbody.AddForce(transform.up * throttle, ForceMode.Impulse);
         rigidbody.AddTorque(transform.right * pitch * responsiveness * Time.deltaTime);
         rigidbody.AddTorque(-transform.forward * roll * responsiveness * Time.deltaTime);

@@ -42815,7 +42815,6 @@ GameObject:
   - component: {fileID: 1101296330}
   - component: {fileID: 1101296331}
   - component: {fileID: 1101296332}
-  - component: {fileID: 1101296333}
   m_Layer: 0
   m_Name: AeroPlane
   m_TagString: Untagged
@@ -42832,7 +42831,7 @@ Transform:
   m_GameObject: {fileID: 1101296329}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 18.7, z: -26.9}
+  m_LocalPosition: {x: 0, y: 15.5, z: -26.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -42881,31 +42880,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vehicleEnterManager: {fileID: 297495211}
-  responsiveness: 500
+  responsiveness: 10
+  movementSpeed: 5
   throttleAmount: 25
   rotorSpeedModifier: 10
   rotorsTransform: {fileID: 313105008}
---- !u!65 &1101296333
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1101296329}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 14.7057905, y: 2.611599, z: 9.300674}
-  m_Center: {x: -0.07899618, y: 0.77158165, z: 0.07471466}
 --- !u!1001 &1103196141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68395,7 +68374,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4849428758027974, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000007451037
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4849428758027974, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalRotation.y
@@ -68403,6 +68382,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4849428758027974, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849428758027974, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4919903689313728, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
