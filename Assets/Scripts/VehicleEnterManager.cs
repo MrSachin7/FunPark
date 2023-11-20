@@ -7,9 +7,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class VehicleEnterManager : MonoBehaviour
 {
     [SerializeField] private Transform vehicleEnterPoint;
-    [SerializeField] private ActionBasedContinuousMoveProvider continuousMoveProvider;
-    [SerializeField] private ActionBasedSnapTurnProvider snapTurnProvider;
-    [SerializeField] private ActionBasedContinuousTurnProvider continousTurnProvider;
+    private ActionBasedContinuousMoveProvider continuousMoveProvider;
+    private ActionBasedSnapTurnProvider snapTurnProvider;
+    private ActionBasedContinuousTurnProvider continousTurnProvider;
     private bool isPlayerInRange = false;
     private bool isPlayerInsideTheVehicle = false;
 
@@ -17,6 +17,15 @@ public class VehicleEnterManager : MonoBehaviour
 
     private bool isButtonPressedLastFrame = false;
 
+
+
+
+    void Awake()
+    {
+        continuousMoveProvider = FindObjectOfType<ActionBasedContinuousMoveProvider>();
+        snapTurnProvider = FindObjectOfType<ActionBasedSnapTurnProvider>();
+        continousTurnProvider = FindObjectOfType<ActionBasedContinuousTurnProvider>();
+    }
 
     void Update()
     {
@@ -161,4 +170,5 @@ public class VehicleEnterManager : MonoBehaviour
         MovePlayerInsideVehicle();
 
     }
+
 }

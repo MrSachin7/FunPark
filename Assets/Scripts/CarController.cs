@@ -59,15 +59,13 @@ public class CarController : MonoBehaviour
         {
             Vector2 leftThumbStickValue = GetThumbStickValue(devices[0]);
             Vector2 rightThumbStickValue = GetThumbStickValue(devices[1]);
-            bool isBreaking = GetTriggerValue(devices[1]);
+           isBreaking = GetTriggerValue(devices[1]) || GetTriggerValue(devices[0]);
 
             // Steering 
             horizontalInput = rightThumbStickValue.x;
-            Debug.Log("Horizontal Input: " + horizontalInput);
 
             // Acceleration
             verticalInput = leftThumbStickValue.y;
-            Debug.Log("Vertical Input: " + verticalInput);
 
         }
     }
@@ -86,6 +84,7 @@ public class CarController : MonoBehaviour
 
     private void ApplyBreaking()
     {
+        Debug.Log("Current Break Force: " + currentBreakForce);
         frontLeftWheelCollider.brakeTorque = currentBreakForce;
         frontRightWheelCollider.brakeTorque = currentBreakForce;
         rearLeftWheelCollider.brakeTorque = currentBreakForce;
@@ -124,12 +123,14 @@ public class CarController : MonoBehaviour
     {
         Vector2 thumbStickValue;
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbStickValue);
+
         return thumbStickValue;
     }
 
     private bool GetTriggerValue(InputDevice device)
     {
-        device.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerValue);
+        bool triggerValue;
+        device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerValue);
         return triggerValue;
     }
 
