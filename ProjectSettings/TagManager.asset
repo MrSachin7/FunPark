@@ -7,6 +7,7 @@ TagManager:
   - LeftHand
   - RightHand
   - Weapon
+  - BowlingBall
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Steering
   - Car
   - Weapon
-  - 
-  - 
+  - Pin
+  - Lane
   - 
   - 
   - 
